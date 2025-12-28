@@ -4,7 +4,7 @@ add_column() {
     counter_for_adding=1
     isPK=""
 
-    while (( counter_for_adding <= num_of_columns )); do
+    while +++++++++++++++(( counter_for_adding <= num_of_columns )); do
 
         clear
         center "Adding Column $counter_for_adding of $num_of_columns"

@@ -3,7 +3,7 @@ list_columns(){
     clear
     center "||======== Current Columns ========||"
 
-    meta_file="$DB_ROOT/$database_name/$table_name".meta
+    meta_file="$DB_ROOT/$database_name/.$table_name".SQL
     names_of_columns=() 
 
 for column in $(cat "$meta_file"); do

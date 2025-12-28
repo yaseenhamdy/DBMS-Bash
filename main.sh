@@ -1,7 +1,9 @@
-#!/bin/bash
+main(){
+
+   #!/bin/bash
 
 rows=$(tput lines)
-cols=$(tput cols)
+term_cols=$(tput cols)
 
 source "./database_func/create_database.sh"
 source "./database_func/list_database.sh"
@@ -14,9 +16,10 @@ mkdir -p "$DB_ROOT"
 
 center() {
     text="$1"
-    clean_text=$(echo -e "$text" | sed 's/\x1b\[[0-9;]*m//g') 
-    padding=$(( (cols - ${#clean_text}) / 2 ))
-    printf "%*s%s\n" $padding "" "$text"
+    clean_text=$(echo -e "$text" | sed 's/\x1b\[[0-9;]*m//g')
+    padding=$(( (term_cols - ${#clean_text}) / 2 ))
+    (( padding < 0 )) && padding=0
+    printf "%*s%s\n" "$padding" "" "$text"
 }
 
 
@@ -27,7 +30,7 @@ clear
 
 tput setaf 2
 center "+---------------------------+"
-center "| $(tput setaf 4)Welcome to our Bash DBMS !$(tput setaf 2)|"
+center "| $(tput setaf 4)Welcome to our Bash DBMS !$(tput setaf 2) |"
 center "| $(tput setaf 4)Written By: YASEEN & A'LAA $(tput setaf 2)|"
 center "+---------------------------+"
 center "| 1 - Create Database       |"
@@ -58,3 +61,7 @@ case $choice in
 
 esac
 done
+
+}
+
+main

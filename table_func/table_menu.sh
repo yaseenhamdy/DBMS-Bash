@@ -1,7 +1,11 @@
 
 table_main_menu(){
 source "./table_func/create_table.sh"
-
+source "./table_func/drop_table.sh"
+source "./table_func/list_tables.sh"
+source "./table_func/insert_into_table.sh"
+source "./table_func/select_from_table.sh"
+source "./table_func/update_table.sh"
 
 while true;
 do
@@ -39,10 +43,25 @@ case $choice in
        ;;
     2) exit
        ;;
-    3) exit
+    3) list_tables
+       read -p "Press Enter to continue..." 
        ;;
-    4) exit;;
-    5) exit;;
+    4) drop_table
+       read -p "Press Enter to continue..." 
+       ;;
+    5) insert_into_table
+       read -p "Press Enter to continue..." 
+       ;;
+   6)  select_from_table
+       read -p "Press Enter to continue..."
+       ;;
+   7)  update_table
+       read -p "Press Enter to continue..."
+       ;;
+   8) exit
+       ;;
+   9) main
+       ;;
     *) center "Invalid choice, please try again."
             echo "" 
             read -p "Press Enter to continue..."
