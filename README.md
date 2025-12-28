@@ -126,13 +126,37 @@ BASH_TASK/
 **Note:** All table operations are menu-driven
 
 ---
+## 🎥 Demo Video
 
-## 🤝 Collaborators
+https://github.com/user-attachments/assets/your-video-id-here.mp4
 
-### Yaseen Hamdy
-🔗 GitHub: [https://github.com/yaseenhamdy](https://github.com/yaseenhamdy)
+*Watch a quick demonstration of the Bash DBMS in action!*
 
-### A'LAA Magdy
-🔗 GitHub: [https://github.com/alaamagdy20211](https://github.com/alaamagdy20211)
+---
+
+## 🤝 Contributors 🎖️
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/yaseenhamdy">
+        <img src="https://github.com/yaseenhamdy.png" width="100px;" alt="Yaseen Hamdy"/>
+        <br />
+        <sub><b>Yaseen Hamdy</b></sub>
+      </a>
+      <br />
+      💻 🎨 📖
+    </td>
+    <td align="center">
+      <a href="https://github.com/alaamagdy20211">
+        <img src="https://github.com/alaamagdy20211.png" width="100px;" alt="A'LAA Magdy"/>
+        <br />
+        <sub><b>A'LAA Magdy</b></sub>
+      </a>
+      <br />
+      💻 🎨 📖
+    </td>
+  </tr>
+</table>
 
 ---
