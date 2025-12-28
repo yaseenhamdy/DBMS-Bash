@@ -9,7 +9,7 @@ delete_from_table() {
 
     while true; do
     read -p "Enter table name: " tableName
-
+        
     meta_del="$DB_ROOT/$database_name/.$tableName.SQL"
     data_del="$DB_ROOT/$database_name/$tableName.SQL"
 
@@ -36,6 +36,18 @@ done
 
     pk="${columns[0]}"
     pk_type="${types[0]}"
+ if [[ ! -s "$meta_file_sel" ]]; then
+        center "Table '$tableName' has no columns. Nothing to delete."
+        read -p "Press Enter to continue..."
+        table_main_menu
+    fi
+
+    if [[ ! -s "$data_file_sel" ]]; then
+        center "Table '$tableName' is empty. No data to delete."
+        read -p "Press Enter to continue..."
+        table_main_menu
+    fi
+
 
     echo "Choose delete option:"
     select option in "Delete by Primary Key" "Delete by Any Column" "Delete All Data"; do
