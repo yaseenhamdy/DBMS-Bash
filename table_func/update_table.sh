@@ -12,31 +12,42 @@ update_table() {
             continue
         fi
 
-        if [[ ! -f "$DB_ROOT/$database_name/$table_name.SQL" || ! -f "$DB_ROOT/$database_name/.$table_name.SQL" ]]; then
+        if [[ ! -f "$DB_ROOT/$database_name/$table_name.SQL" || \
+              ! -f "$DB_ROOT/$database_name/.$table_name.SQL" ]]; then
             center "Table does not exist."
             continue
         fi
+
         break
     done
 
     meta_file_upd="$DB_ROOT/$database_name/.$table_name.SQL"
     data_file_upd="$DB_ROOT/$database_name/$table_name.SQL"
 
+    if [[ ! -s "$meta_file_upd" ]]; then
+        center "Table '$table_name' has no columns. Nothing to update."
+        read -p "Press Enter to continue..."
+        table_main_menu
+    fi
+
+    if [[ ! -s "$data_file_upd" ]]; then
+        center "Table is empty. No data to update"
+        read -p "Press Enter to continue..."
+        table_main_menu
+    fi
+
     pk_name=$(awk -F: 'NR==1 {print $1}' "$meta_file_upd")
     pk_type=$(awk -F: 'NR==1 {print $2}' "$meta_file_upd")
 
-
     echo ""
-   center "||======== Current data ========||"
+    center "||======== Current data ========||"
 
-   while IFS= read -r line; do
-      center "$line"
-   done < "$DB_ROOT/$database_name/$table_name.SQL"
+    while IFS= read -r line; do
+        center "$line"
+    done < "$data_file_upd"
 
-center "||=================================||"
-
+    center "||=================================||"
     echo ""
-
 
     while true; do
         read -p "Enter primary key value of the row to update: " primary_key_val
@@ -129,7 +140,6 @@ center "||=================================||"
 
         if (( col_index == 1 )); then
             old_pk=$(echo "$old_row" | cut -d: -f1)
-
             if [[ "$new_value" != "$old_pk" ]]; then
                 if grep -q "^$new_value:" "$data_file_upd"; then
                     center "This primary key already exists. Choose another one."
@@ -165,4 +175,6 @@ center "||=================================||"
     center "Row updated successfully!"
     echo "New row:"
     echo "$new_row"
+
+    read -p "Press Enter to continue..."
 }

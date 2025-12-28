@@ -6,18 +6,17 @@ select_from_table() {
     list_tables
     echo ""
 
-    # pick valid table
     while true; do
         read -p "Enter table name: " table_name
 
         if [[ -z "$table_name" ]]; then
-            echo "Table name cannot be empty."
+            center "Table name cannot be empty."
             continue
         fi
 
         if [[ ! -f "$DB_ROOT/$database_name/$table_name.SQL" || \
               ! -f "$DB_ROOT/$database_name/.$table_name.SQL" ]]; then
-            echo "Table does not exist."
+            center "Table does not exist."
             continue
         fi
 
@@ -27,39 +26,49 @@ select_from_table() {
     meta_file_sel="$DB_ROOT/$database_name/.$table_name.SQL"
     data_file_sel="$DB_ROOT/$database_name/$table_name.SQL"
 
-    # menu loop
+    if [[ ! -s "$meta_file_sel" ]]; then
+        center "Table '$table_name' has no columns. Nothing to select."
+        read -p "Press Enter to continue..."
+        table_main_menu
+    fi
+
+    if [[ ! -s "$data_file_sel" ]]; then
+        center "Table '$table_name' is empty. No data to select."
+        read -p "Press Enter to continue..."
+        table_main_menu
+    fi
+
     while true; do
         clear
         center "Selected table: $table_name"
         center "+----------------------------+"
-        center "| 1 - select specific columns|"
+        center "| 1 - Select specific columns|"
         center "| 2 - Back to Table Menu     |"
         center "+----------------------------+"
 
         read -p "Choice : " choice
 
         case $choice in
-           
             1)
                 list_columns
                 echo ""
-                echo "Enter column names separated by space (example: name age):"
-                read -r cols_input
+                read -p "Enter column names separated by space (example: name age): " cols_input
 
                 if [[ -z "$cols_input" ]]; then
-                    echo "You must enter at least one column."
+                    center "You must enter at least one column."
                     read -p "Press Enter to continue..."
                     continue
                 fi
 
                 field_list=""
+                invalid_col=0
+
                 for col in $cols_input; do
                     idx=$(grep -n "^$col:" "$meta_file_sel" | cut -d: -f1)
 
                     if [[ -z "$idx" ]]; then
-                        echo "Column '$col' does not exist."
-                        read -p "Press Enter to continue..."
-                        field_list=""
+                        center "Column '$col' does not exist."
+                        invalid_col=1
                         break
                     fi
 
@@ -70,7 +79,8 @@ select_from_table() {
                     fi
                 done
 
-                if [[ -z "$field_list" ]]; then
+                if (( invalid_col == 1 )); then
+                    read -p "Press Enter to continue..."
                     continue
                 fi
 
@@ -83,7 +93,7 @@ select_from_table() {
 
                     filter_idx=$(grep -n "^$filter_col:" "$meta_file_sel" | cut -d: -f1)
                     if [[ -z "$filter_idx" ]]; then
-                        echo "Filter column '$filter_col' does not exist."
+                        center "Filter column '$filter_col' does not exist."
                         read -p "Press Enter to continue..."
                         continue
                     fi
@@ -105,7 +115,7 @@ select_from_table() {
                         }
                         END {
                             if (found == 0)
-                                print "No records found where filter value = " fval
+                                print "No records found where " fcol " = " fval
                         }
                     ' "$data_file_sel"
                 else
@@ -129,7 +139,7 @@ select_from_table() {
                 ;;
 
             *)
-                echo "Invalid choice."
+                center "Invalid choice."
                 read -p "Press Enter to continue..."
                 ;;
         esac
