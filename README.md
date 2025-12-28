@@ -23,14 +23,17 @@ The project aims to:
 ---
 
 ## ▶️ How to Run the Project
-
 1. Make sure you are using a Linux system with Bash
 2. Give execution permission:
-   ```bash
+```bash
    chmod +x main.sh
    ./main.sh
+```
 
-📂 Project Structure   
+---
+
+## 📂 Project Structure   
+```
 BASH_TASK/
 │
 ├── main.sh
@@ -60,68 +63,76 @@ BASH_TASK/
     ├── update_table.sh
     ├── delete_from_table.sh
     └── add_column.sh
+```
 
+---
 
-🧩 File Responsibilities
-🔹 main.sh
+## 🧩 File Responsibilities
 
-Entry point of the application
+### 🔹 main.sh
+- Entry point of the application
+- Displays the main menu
+- Handles navigation between database operations
+- Supports Wizard-based and SQL-based commands
 
-Displays the main menu
+---
 
-Handles navigation between database operations
+## 🗄️ Database Functions (`database_func/`)
 
-Supports Wizard-based and SQL-based commands
+| File | Description |
+|------|-------------|
+| `create_database.sh` | Create a database using interactive wizard |
+| `create_db_regex.sh` | Create database using SQL (`CREATE DATABASE db;`) |
+| `list_database.sh` | List all available databases |
+| `connect_to_database.sh` | Connect to database using wizard |
+| `connect_to_db_regex.sh` | Connect using SQL (`USE db;`) |
+| `drop_database.sh` | Drop database using wizard |
+| `drop_database_regex.sh` | Drop database using SQL (`DROP DATABASE db;`) |
 
-🗄️ Database Functions (database_func/)
-File	Description
-create_database.sh	Create a database using interactive wizard
-create_db_regex.sh	Create database using SQL (CREATE DATABASE db;)
-list_database.sh	List all available databases
-connect_to_database.sh	Connect to database using wizard
-connect_to_db_regex.sh	Connect using SQL (USE db;)
-drop_database.sh	Drop database using wizard
-drop_database_regex.sh	Drop database using SQL (DROP DATABASE db;)
-📋 Table Functions (table_func/)
-File	Description
-table_menu.sh	Table management menu
-create_table.sh	Create a new table
-drop_table.sh	Drop a table
-list_tables.sh	List all tables
-listing_columns.sh	Show table columns and metadata
-insert_into_table.sh	Insert data into a table
-select_from_table.sh	Select records (with or without filters)
-update_table.sh	Update table records
-delete_from_table.sh	Delete records from table
-add_column.sh	Add a new column to a table
+---
 
-🧪 Supported SQL-like Commands
-🗃️ Database Level
-CREATE DATABASE db_name;
-USE db_name;
-DROP DATABASE db_name;
+## 📋 Table Functions (`table_func/`)
 
-📊 Table Level
+| File | Description |
+|------|-------------|
+| `table_menu.sh` | Table management menu |
+| `create_table.sh` | Create a new table |
+| `drop_table.sh` | Drop a table |
+| `list_tables.sh` | List all tables |
+| `listing_columns.sh` | Show table columns and metadata |
+| `insert_into_table.sh` | Insert data into a table |
+| `select_from_table.sh` | Select records (with or without filters) |
+| `update_table.sh` | Update table records |
+| `delete_from_table.sh` | Delete records from table |
+| `add_column.sh` | Add a new column to a table |
 
-Create table
+---
 
-Insert records
+## 🧪 Supported SQL-like Commands
 
-Select specific columns
+### 🗃️ Database Level
+- `CREATE DATABASE db_name;`
+- `USE db_name;`
+- `DROP DATABASE db_name;`
 
-Filter records
+### 📊 Table Level
+- Create table
+- Insert records
+- Select specific columns
+- Filter records
+- Update records
+- Delete records
 
-Update records
+**Note:** All table operations are menu-driven
 
-Delete records
+---
 
-All table operations are menu-driven
+## 🤝 Collaborators
 
-
-🤝 Collaborators
-
-Yaseen Hamdy
+### Yaseen Hamdy
 🔗 GitHub: [https://github.com/yaseenhamdy](https://github.com/yaseenhamdy)
 
-A'LAA
-🔗 GitHub: https://github.com/alaamagdy20211
+### A'LAA Magdy
+🔗 GitHub: [https://github.com/alaamagdy20211](https://github.com/alaamagdy20211)
+
+---
