@@ -56,7 +56,6 @@ create_table() {
     while [ $counter -le $colsNum ]; do
 
         while true; do
-            clear
             read -p "Name of column $counter: " colName
 
             # name format
