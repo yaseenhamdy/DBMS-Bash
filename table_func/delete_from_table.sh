@@ -117,4 +117,3 @@ done
         esac
     done
 }
-delete_from_table

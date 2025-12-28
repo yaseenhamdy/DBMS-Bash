@@ -1,13 +1,15 @@
 #!/bin/bash
 
+connect_to_database_sql() {
+        source "./table_func/table_menu.sh"
 
-connect_to_database() {
     source "./database_func/list_database.sh"
+
     clear
 
     databases=("$DB_ROOT"/*)
 
-    if [ ${#databases[@]} -eq 0 ]; then
+    if [[ ! -e "${databases[0]}" ]]; then
         center "There is No Databases to connect"
         return
     fi
@@ -18,34 +20,20 @@ connect_to_database() {
     center "||=================================||"
     echo ""
 
-    read -p "Enter SQL command: " sql_input
+    read -p "Enter SQL command  ex. USE database_name  or  use database_name: " sql_input
 
     if [[ $sql_input =~ ^[[:space:]]*[Uu][Ss][Ee][[:space:]]+([a-zA-Z][a-zA-Z0-9_]*)[[:space:]]*\;?[[:space:]]*$ ]]; then
-
         database_name="${BASH_REMATCH[1]}"
-        found=0
+        selected_db="$DB_ROOT/$database_name"
 
-        for i in "${!databases[@]}"; do
-            db_name=$(basename "${databases[$i]}")
-
-            if [[ "$db_name" == "$database_name" ]]; then
-                found=1
-                selected_db="${databases[$i]}"
-                database_name=$(basename "$selected_db")
-                center "Connected to database: $database_name"
-                source "./table_func/table_menu.sh"
-                table_main_menu
-                break
-            fi
-        done
-
-        if [ $found -eq 0 ]; then
+        if [[ -d "$selected_db" ]]; then
+            center "Connected to database: $database_name"
+            table_main_menu
+        else
             center "Database '$database_name' not found"
         fi
     else
         center "Invalid SQL. Use: USE database_name;"
+        center "Example: USE mydb;"
     fi
 }
-
-
-connect_to_database
