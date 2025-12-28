@@ -126,13 +126,6 @@ BASH_TASK/
 **Note:** All table operations are menu-driven
 
 ---
-## 🎥 Demo Video
-
-https://github.com/user-attachments/assets/your-video-id-here.mp4
-
-*Watch a quick demonstration of the Bash DBMS in action!*
-
----
 
 ## 🤝 Contributors 🎖️
 
