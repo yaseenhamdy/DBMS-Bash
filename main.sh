@@ -8,6 +8,7 @@ term_cols=$(tput cols)
 source "./database_func/create_database.sh"
 source "./database_func/list_database.sh"
 source "./database_func/connect_to_database.sh"
+source "./database_func/drop_database.sh"
 
 DB_ROOT="./Databases"
 valid_string="^[a-zA-Z][a-zA-Z0-9_]*$"
@@ -52,7 +53,9 @@ case $choice in
     3) connect_to_database
        read -p "Press Enter to continue..." 
        ;;
-    4) exit;;
+    4) drop_database
+       read -p "Press Enter to continue..." 
+       ;;
     5) exit;;
     *) center "Invalid choice, please try again."
             echo "" 

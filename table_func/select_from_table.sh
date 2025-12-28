@@ -1,12 +1,12 @@
 select_from_table() {
     source "./table_func/list_tables.sh"
-    source "./table_func/table_menu.sh"
     source "./table_func/listing_columns.sh"
 
     clear
     list_tables
     echo ""
 
+    # pick valid table
     while true; do
         read -p "Enter table name: " table_name
 
@@ -15,7 +15,8 @@ select_from_table() {
             continue
         fi
 
-        if [[ ! -f "$DB_ROOT/$database_name/$table_name.SQL" || ! -f "$DB_ROOT/$database_name/.$table_name.SQL" ]]; then
+        if [[ ! -f "$DB_ROOT/$database_name/$table_name.SQL" || \
+              ! -f "$DB_ROOT/$database_name/.$table_name.SQL" ]]; then
             echo "Table does not exist."
             continue
         fi
@@ -23,49 +24,110 @@ select_from_table() {
         break
     done
 
+    meta_file_sel="$DB_ROOT/$database_name/.$table_name.SQL"
+    data_file_sel="$DB_ROOT/$database_name/$table_name.SQL"
+
+    # menu loop
     while true; do
         clear
         center "Selected table: $table_name"
-        center "+---------------------------+"
-        center "| 1 - select all table      |"
-        center "| 2 - select specific row   |"
-        center "| 3 - select specific column|"
-        center "| 4 - Back to Table Menu    |"
-        center "+---------------------------+"
+        center "+----------------------------+"
+        center "| 1 - select specific columns|"
+        center "| 2 - Back to Table Menu     |"
+        center "+----------------------------+"
 
         read -p "Choice : " choice
 
         case $choice in
+           
             1)
-                cat "$DB_ROOT/$database_name/$table_name.SQL"
-                read -p "Press Enter to continue..."
-                ;;
-            2)
-                read -p "Enter primary key value: " pk_value
-                if grep -q "^$pk_value:" "$DB_ROOT/$database_name/$table_name.SQL"; then
-                    grep "^$pk_value:" "$DB_ROOT/$database_name/$table_name.SQL"
-                else
-                    echo "No row found with primary key value: $pk_value"
-                fi
-                read -p "Press Enter to continue..."
-                ;;
-            3)
                 list_columns
+                echo ""
+                echo "Enter column names separated by space (example: name age):"
+                read -r cols_input
 
-                read -p "Enter column name: " col_name
-
-
-                if grep -q "^$col_name:" "$DB_ROOT/$database_name/.$table_name.SQL"; then
-                    col_index=$(grep -n "^$col_name:" "$DB_ROOT/$database_name/.$table_name.SQL" | cut -d: -f1)
-                    cut -d: -f"$col_index" "$DB_ROOT/$database_name/$table_name.SQL"
-                else
-                    echo "Column $col_name does not exist in table $table_name"
+                if [[ -z "$cols_input" ]]; then
+                    echo "You must enter at least one column."
+                    read -p "Press Enter to continue..."
+                    continue
                 fi
+
+                field_list=""
+                for col in $cols_input; do
+                    idx=$(grep -n "^$col:" "$meta_file_sel" | cut -d: -f1)
+
+                    if [[ -z "$idx" ]]; then
+                        echo "Column '$col' does not exist."
+                        read -p "Press Enter to continue..."
+                        field_list=""
+                        break
+                    fi
+
+                    if [[ -z "$field_list" ]]; then
+                        field_list="$idx"
+                    else
+                        field_list="$field_list,$idx"
+                    fi
+                done
+
+                if [[ -z "$field_list" ]]; then
+                    continue
+                fi
+
+                echo ""
+                read -p "Do you want to filter? (y/n): " do_filter
+
+                if [[ "$do_filter" =~ ^[Yy]$ ]]; then
+                    list_columns
+                    read -p "Enter filter column name: " filter_col
+
+                    filter_idx=$(grep -n "^$filter_col:" "$meta_file_sel" | cut -d: -f1)
+                    if [[ -z "$filter_idx" ]]; then
+                        echo "Filter column '$filter_col' does not exist."
+                        read -p "Press Enter to continue..."
+                        continue
+                    fi
+
+                    read -p "Enter filter value for $filter_col: " filter_val
+
+                    awk -F':' -v fields="$field_list" -v fcol="$filter_idx" -v fval="$filter_val" '
+                        BEGIN {
+                            n = split(fields, f, ",")
+                            found = 0
+                        }
+                        $fcol == fval {
+                            found = 1
+                            for (i = 1; i <= n; i++) {
+                                printf "%s", $f[i]
+                                if (i < n) printf ":"
+                            }
+                            printf "\n"
+                        }
+                        END {
+                            if (found == 0)
+                                print "No records found where filter value = " fval
+                        }
+                    ' "$data_file_sel"
+                else
+                    awk -F':' -v fields="$field_list" '
+                        BEGIN { n = split(fields, f, ",") }
+                        {
+                            for (i = 1; i <= n; i++) {
+                                printf "%s", $f[i]
+                                if (i < n) printf ":"
+                            }
+                            printf "\n"
+                        }
+                    ' "$data_file_sel"
+                fi
+
                 read -p "Press Enter to continue..."
                 ;;
-            4)
-                table_main_menu
+
+            2)
+                return
                 ;;
+
             *)
                 echo "Invalid choice."
                 read -p "Press Enter to continue..."
